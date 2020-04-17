@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>窗户模拟展示</title>
+	<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<style type="text/css">
+   svg{
+       max-height: 500px;
+   }
+   </style>
+<body>
+    <div id="canvas1" style="border:1px dashed rgb(33, 159, 175);min-height:50%;"></div>
+    <div>
+        <button onclick="CreateRect()">创建方块</button>
+        <button onclick="CreateCircle()">创建圆形</button>
+    </div>
+    <div>
+        距上边距位置：
+        <input type="text" placeholder="高" value="100" id="addlineheight">
+        <button onclick="CreateLine()">加横线</button>
+    </div>
+    <div>
+        距左边距位置：
+        <input type="text" placeholder="高" value="100" id="addrowwidth">
+        <button onclick="CreateRow()">加竖线</button>
+    </div>
+    <div id="divlast">
+        <button onclick="DownLoad()">下载矢量图</button>
+    </div>
+    <script type="text/javascript" src="svg.min.js"></script>
+    <script type="text/javascript" src="svg.draggable.min.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="saveSvgAsPng.js"></script>
+    <script type="text/javascript" src="assets/js/main.js"></script>
+    <script type="text/javascript">
+        var canvas1=null;
+        var obj;
+        var objdiv;
+        function checkCanvas1()
+        {
+            if(canvas1==null)
+            {
+                canvas1 = SVG('canvas1').size('100%', '100%');
+            }
+        }
+        function CreateRect() {
+            checkCanvas1();
+            var rect = canvas1.rect('20%', '20%');
+            rect.attr({ 'fill': '#496E91', 'stroke': 'pink' });
+            rect.draggable();
+            obj = rect;
+            objdiv = canvas1;
+        }
+        function CreateCircle() {
+            checkCanvas1();
+            var rect = canvas1.circle(50);
+            rect.attr({ 'fill': '#FFC23E', 'stroke': 'pink' });
+            rect.draggable();
+        }
+        function CreateLine() {
+            //obj.attr({fill: 'red','stroke-width': 3});
+            var x = $("#addlineheight").val();
+            var x2 = $(obj)[0].node.width.baseVal.value;
+            var nested = objdiv.nested();
+            var rect = nested.line(0, x, x2, x).attr({ 'stroke': 'white', 'stroke-width': 2 });
+        }
+        function CreateRow() {
+            //obj.attr({fill: 'red','stroke-width': 3});
+            var x = $("#addrowwidth").val();
+            var y2 = $(obj)[0].node.height.baseVal.value;
+            var nested = objdiv.nested();
+            var rect = nested.line(x, 0, x, y2).attr({ 'stroke': 'white', 'stroke-width': 2 });
+        }
+        function DownLoad() {
+            saveSvgAsPng(obj.parent.node, "test.png");
+            // var canvas = obj.parent.node;
+            // svgAsPngUri(canvas, null, function(uri) {
+            // var a = document.createElement('a');
+            // a.href = uri;  //将画布内的信息导出为png图片数据
+            // a.download = "test";  //设定下载名称
+            // a.click(); //点击触发下载
+            //});
+        }
+    </script>
+</body>
+
+</html>
