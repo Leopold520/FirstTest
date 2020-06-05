@@ -1,23 +1,33 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>窗户模拟展示1111</title>
+    <title>窗户模拟展示</title>
 	<link rel="stylesheet" href="assets/css/main.css" />
 </head>
 <style type="text/css">
    svg{
        max-height: 500px;
    }
+    .addting{
+     cursor:url('ting.ico'),pointer;
+    }
    </style>
+  <link rel="stylesheet" type="text/css" href="svg.select.css" />
 <body>
-    <div id="canvas1" style="border:1px dashed rgb(33, 159, 175);min-height:50%;"></div>
+    <div id="canvas1" style="border:1px dashed rgb(33, 159, 175);min-height:600px;"></div>
     <div>
         <button onclick="CreateRect()">创建方块</button>
         <button onclick="CreateCircle()">创建圆形</button>
+        <button onclick="CreateChuangKuang()">创建窗框</button>
+        <button onclick="CreateBoli()">创建玻璃</button>
+        <button onclick="CreateHengZhongTing()">创建横中梃</button>
+        <button onclick="CreateShuZhongTing()">创建竖中梃</button>
+        <button onclick="CreateYaXian()">创建压线</button>
+        <button onclick="GetXY()">获取坐标</button>
     </div>
     <div>
         距上边距位置：
@@ -32,15 +42,17 @@
     <div id="divlast">
         <button onclick="DownLoad()">下载矢量图</button>
     </div>
-    <script type="text/javascript" src="svg.min.js"></script>
+    <script type="text/javascript" src="svg.js"></script>
     <script type="text/javascript" src="svg.draggable.min.js"></script>
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="saveSvgAsPng.js"></script>
     <script type="text/javascript" src="assets/js/main.js"></script>
+    <script type="text/javascript" src="svg.select.js"></script>
     <script type="text/javascript">
         var canvas1=null;
         var obj;
         var objdiv;
+        checkCanvas1()
         function checkCanvas1()
         {
             if(canvas1==null)
@@ -49,32 +61,80 @@
             }
         }
         function CreateRect() {
-            checkCanvas1();
             var rect = canvas1.rect('20%', '20%');
             rect.attr({ 'fill': '#496E91', 'stroke': 'pink' });
             rect.draggable();
-            obj = rect;
-            objdiv = canvas1;
+            rect.id('rect1');
+            //rect.select();//select 插件选中
         }
         function CreateCircle() {
-            checkCanvas1();
             var rect = canvas1.circle(50);
             rect.attr({ 'fill': '#FFC23E', 'stroke': 'pink' });
             rect.draggable();
         }
-        function CreateLine() {
+        function CreateChuangKuang() { 
+             //var nested = canvas1.nested();
+             //var r1 = nested.rect(400, 400);
+             //var group = canvas1.group();
+             //group.id("g1");
+             var r2 = canvas1.rect(400, 400).fill('#496E91');
+             //var localXY=document.getElementById("g1").getBoundingClientRect();
+
+             //var r3 = canvas1.rect(200, 50).fill('#496E91');
+              //group.add(r2);
+              //group.add(r3);
+
+            r2.draggable();
+            r2.id('r2');
+              //group.draggable();
+              AddEvent(r2);
+            //var r1=SVG.get('rect1');
+            //var r2=canvas1.nested();
+            //var group = r2.group();
+            //console.log(r2);
+            //r2.size(300, 300);
+            //r1.size(300, 300);
+            //r1.move(100,100);
+            //rect.draggable();   
+         }
+        function GetXY() { 
+            console.log(document.getElementById("g1").getBBox());
+            console.log(document.getElementById("g1").getBoundingClientRect());
+            console.log(document.getElementById("canvas1").getBoundingClientRect());
+         }
+        function CreateHengZhongTing() {
             //obj.attr({fill: 'red','stroke-width': 3});
-            var x = $("#addlineheight").val();
-            var x2 = $(obj)[0].node.width.baseVal.value;
-            var nested = objdiv.nested();
-            var rect = nested.line(0, x, x2, x).attr({ 'stroke': 'white', 'stroke-width': 2 });
+            var XY=document.getElementById("r2").getBoundingClientRect();
+            var divXY=document.getElementById("canvas1").getBoundingClientRect();
+            var x = 0;
+            var xy =  (XY.height)/2;
+            var x2x=XY.width;
+            var x2y=(XY.height)/2;
+            console.log(x,xy,x2x,x2y);
+            //var nested =  SVG('r2').nested();
+            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': 'white', 'stroke-width': 10 });
+            AddEvent(rect);
+            rect.draggable();
         }
-        function CreateRow() {
-            //obj.attr({fill: 'red','stroke-width': 3});
-            var x = $("#addrowwidth").val();
-            var y2 = $(obj)[0].node.height.baseVal.value;
-            var nested = objdiv.nested();
-            var rect = nested.line(x, 0, x, y2).attr({ 'stroke': 'white', 'stroke-width': 2 });
+        function CreateShuZhongTing() {
+            var XY=document.getElementById("r2").getBoundingClientRect();
+            var divXY=document.getElementById("canvas1").getBoundingClientRect();
+            var x = XY.width/2;
+            var xy = 0;
+            var x2x=XY.width/2;
+            var x2y=XY.height;
+            //var nested =  SVG('r2').nested();
+            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': 'white', 'stroke-width': 10 });
+            AddEvent(rect);
+            rect.draggable();
+        }
+        function AddEvent(obj)
+        {
+            obj.click(function() {
+                this.attr({ 'stroke': 'white' , 'stroke-width': 1,'stroke-dasharray': 5});
+                //this.select();
+            });
+            
         }
         function DownLoad() {
             saveSvgAsPng(obj.parent.node, "test.png");
