@@ -106,35 +106,47 @@
             //obj.attr({fill: 'red','stroke-width': 3});
             var XY=document.getElementById("r2").getBoundingClientRect();
             var divXY=document.getElementById("canvas1").getBoundingClientRect();
-            var x = 0;
-            var xy =  (XY.height)/2;
-            var x2x=XY.width;
-            var x2y=(XY.height)/2;
+            console.log(XY);
+            console.log(divXY);
+            var x = (XY.x-divXY.x);
+            var xy =  XY.height/2+XY.y-divXY.y;
+            var x2x= XY.width+XY.x-divXY.x;
+            var x2y=XY.height/2+XY.y-divXY.y;
             console.log(x,xy,x2x,x2y);
             //var nested =  SVG('r2').nested();
-            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': 'white', 'stroke-width': 10 });
+            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': 'white', 'stroke-width': 6 });
             AddEvent(rect);
             rect.draggable();
         }
         function CreateShuZhongTing() {
             var XY=document.getElementById("r2").getBoundingClientRect();
             var divXY=document.getElementById("canvas1").getBoundingClientRect();
-            var x = XY.width/2;
-            var xy = 0;
-            var x2x=XY.width/2;
-            var x2y=XY.height;
+            var x =  XY.x-divXY.x+XY.width/2;
+            var xy = (XY.y-divXY.y);
+            var x2x=XY.x-divXY.x+XY.width/2;
+            var x2y=XY.height+XY.y-divXY.y;
             //var nested =  SVG('r2').nested();
-            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': 'white', 'stroke-width': 10 });
+            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': 'white', 'stroke-width': 6 });
             AddEvent(rect);
             rect.draggable();
         }
         function AddEvent(obj)
         {
-            obj.click(function() {
+            obj.dblclick(function() {
                 this.attr({ 'stroke': 'white' , 'stroke-width': 1,'stroke-dasharray': 5});
                 //this.select();
             });
-            
+        }
+        function CreateBoli()//右上角加玻璃
+        {
+            var XY=document.getElementById("r2").getBoundingClientRect();
+            var divXY=document.getElementById("canvas1").getBoundingClientRect();
+            var x =  XY.x-divXY.x+XY.width/2;
+            var xy = (XY.y-divXY.y);
+            var x2x=XY.x-divXY.x+XY.width/2;
+            var a='M'+x+' '+xy+' H '+x2x+' V '+(xy/2)+' H '+x+' Z';
+            console.log(a);
+            SVG('canvas1').path("M150 0 L75 200 L225 200 Z");
         }
         function DownLoad() {
             saveSvgAsPng(obj.parent.node, "test.png");
