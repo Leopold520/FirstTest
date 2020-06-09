@@ -27,6 +27,7 @@
         <button onclick="CreateHengZhongTing()">创建横中梃</button>
         <button onclick="CreateShuZhongTing()">创建竖中梃</button>
         <button onclick="CreateYaXian()">创建压线</button>
+        <button onclick="AddCZ()">填充材质</button>
         <button onclick="GetXY()">获取坐标</button>
     </div>
     <div>
@@ -43,7 +44,7 @@
         <button onclick="DownLoad()">下载矢量图</button>
     </div>
     <script type="text/javascript" src="svg.js"></script>
-    <script type="text/javascript" src="svg.draggable.min.js"></script>
+    <script type="text/javascript" src="svg.draggable.js"></script>
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="saveSvgAsPng.js"></script>
     <script type="text/javascript" src="assets/js/main.js"></script>
@@ -141,12 +142,19 @@
         {
             var XY=document.getElementById("r2").getBoundingClientRect();
             var divXY=document.getElementById("canvas1").getBoundingClientRect();
+            
+            
             var x =  XY.x-divXY.x+XY.width/2;
             var xy = (XY.y-divXY.y);
-            var x2x=XY.x-divXY.x+XY.width/2;
-            var a='M'+x+' '+xy+' H '+x2x+' V '+(xy/2)+' H '+x+' Z';
+            var x2x= XY.width+XY.x-divXY.x;
+            var x3x=(XY.height+XY.y-divXY.y)/2;
+            var a='M'+x+' '+xy+' H '+x2x+' V '+x3x+' H '+x+' Z';
             console.log(a);
-            SVG('canvas1').path("M150 0 L75 200 L225 200 Z");
+            var aaa=canvas1.path(a);
+        }
+        function AddCZ()
+        {
+            //<image width="100%" height="100%" x="0" y="0" stroke="black" xlink:href="111.png"></image>
         }
         function DownLoad() {
             saveSvgAsPng(obj.parent.node, "test.png");
@@ -157,6 +165,7 @@
             // a.download = "test";  //设定下载名称
             // a.click(); //点击触发下载
             //});
+           
         }
     </script>
 </body>
