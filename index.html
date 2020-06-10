@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>窗户模拟展示</title>
-	<link rel="stylesheet" href="assets/css/main.css" />
+	<!-- <link rel="stylesheet" href="assets/css/main.css" /> -->
 </head>
 <style type="text/css">
    svg{
@@ -19,6 +19,14 @@
   <link rel="stylesheet" type="text/css" href="svg.select.css" />
 <body>
     <div id="canvas1" style="border:1px dashed rgb(33, 159, 175);min-height:600px;"></div>
+    <svg xmlns xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <pattern id="patter-0" width="200px" height="200px" patternUnits ="userSpaceOnUse">
+                <image width="200px" height="200px" preserveAspectRatio="none" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="111.png">
+                </image>
+            </pattern>
+        </defs>
+    </svg>
     <div>
         <button onclick="CreateRect()">创建方块</button>
         <button onclick="CreateCircle()">创建圆形</button>
@@ -43,6 +51,7 @@
     <div id="divlast">
         <button onclick="DownLoad()">下载矢量图</button>
     </div>
+
     <script type="text/javascript" src="svg.js"></script>
     <script type="text/javascript" src="svg.draggable.js"></script>
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -58,7 +67,7 @@
         {
             if(canvas1==null)
             {
-                canvas1 = SVG('canvas1').size('100%', '100%');
+                canvas1 = SVG('canvas1').size('100%', '600px');
             }
         }
         function CreateRect() {
@@ -78,7 +87,8 @@
              //var r1 = nested.rect(400, 400);
              //var group = canvas1.group();
              //group.id("g1");
-             var r2 = canvas1.rect(400, 400).fill('#496E91');
+             var r2 = canvas1.rect(400, 400).fill('none').attr({ 'stroke': '#953734', 'stroke-width': 10 ,'fill-opacity':"0"});
+             //canvas1;
              //var localXY=document.getElementById("g1").getBoundingClientRect();
 
              //var r3 = canvas1.rect(200, 50).fill('#496E91');
@@ -142,8 +152,6 @@
         {
             var XY=document.getElementById("r2").getBoundingClientRect();
             var divXY=document.getElementById("canvas1").getBoundingClientRect();
-            
-            
             var x =  XY.x-divXY.x+XY.width/2;
             var xy = (XY.y-divXY.y);
             var x2x= XY.width+XY.x-divXY.x;
@@ -151,10 +159,14 @@
             var a='M'+x+' '+xy+' H '+x2x+' V '+x3x+' H '+x+' Z';
             console.log(a);
             var aaa=canvas1.path(a);
+            aaa.id('boli1');
         }
         function AddCZ()
         {
+           var boli1= SVG.get('boli1');
+            //aaa.id('boli1');
             //<image width="100%" height="100%" x="0" y="0" stroke="black" xlink:href="111.png"></image>
+            boli1.attr({ 'fill': 'url(#patter-0)' });
         }
         function DownLoad() {
             saveSvgAsPng(obj.parent.node, "test.png");
