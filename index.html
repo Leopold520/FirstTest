@@ -87,7 +87,7 @@
              //var r1 = nested.rect(400, 400);
              //var group = canvas1.group();
              //group.id("g1");
-             var r2 = canvas1.rect(400, 400).fill('none').attr({ 'stroke': '#953734', 'stroke-width': 10 ,'fill-opacity':"0"});
+             var r2 = canvas1.rect(400, 400).fill('none').attr({ 'stroke': '#953734', 'stroke-width':10 ,'fill-opacity':"0" });
              //canvas1;
              //var localXY=document.getElementById("g1").getBoundingClientRect();
 
@@ -125,7 +125,7 @@
             var x2y=XY.height/2+XY.y-divXY.y;
             console.log(x,xy,x2x,x2y);
             //var nested =  SVG('r2').nested();
-            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': 'white', 'stroke-width': 6 });
+            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': '#953734', 'stroke-width': 6 });
             AddEvent(rect);
             rect.draggable();
         }
@@ -137,7 +137,7 @@
             var x2x=XY.x-divXY.x+XY.width/2;
             var x2y=XY.height+XY.y-divXY.y;
             //var nested =  SVG('r2').nested();
-            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': 'white', 'stroke-width': 6 });
+            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': '#953734', 'stroke-width': 6 });
             AddEvent(rect);
             rect.draggable();
         }
@@ -160,6 +160,7 @@
             console.log(a);
             var aaa=canvas1.path(a);
             aaa.id('boli1');
+            aaa.ad(boli1);
         }
         function AddCZ()
         {
