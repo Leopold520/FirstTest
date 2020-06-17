@@ -10,7 +10,7 @@
 </head>
 <style type="text/css">
    svg{
-       max-height: 500px;
+       max-height: 600px;
    }
     .addting{
      cursor:url('ting.ico'),pointer;
@@ -85,20 +85,84 @@
         function CreateChuangKuang() { 
              //var nested = canvas1.nested();
              //var r1 = nested.rect(400, 400);
-             //var group = canvas1.group();
-             //group.id("g1");
-             var r2 = canvas1.rect(400, 400).fill('none').attr({ 'stroke': '#953734', 'stroke-width':10 ,'fill-opacity':"0" });
-             //canvas1;
+             var group = canvas1.group();
+             group.id("gdefault");
+
+             var groupkuang = canvas1.group();
+             groupkuang.id("g1");
+             var r1 = canvas1.rect(400, 400).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':50,'y':50});
+             var r2 = canvas1.rect(380, 380).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':60,'y':60});
+             var r3 = canvas1.rect(370, 370).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':65,'y':65});
+          
+            //框line
+             var linekuang1 = canvas1.line(50,50, 60, 60).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var linekuang2 = canvas1.line(450, 50, 440, 60).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var linekuang3 = canvas1.line(450, 450, 440, 440).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var linekuang4 = canvas1.line(50, 450, 60, 440).attr({ 'stroke': 'black', 'stroke-width': 1 });
+
+             //压线line
+             var lineyaxian1 = canvas1.line(60,60, 65, 65).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var lineyaxian2 = canvas1.line(440, 60, 435, 65).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var lineyaxian3 = canvas1.line(440, 440, 435, 435).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var lineyaxian4 = canvas1.line(60, 440, 65, 435).attr({ 'stroke': 'black', 'stroke-width': 1 });
+            
+             //玻璃line
+             var linebl1 = canvas1.line(245, 250, 250, 245).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var linebl2 = canvas1.line(240, 260, 260, 240).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var linebl3 = canvas1.line(255, 250, 250, 255).attr({ 'stroke': 'black', 'stroke-width': 1 });
+
+             groupkuang.add(r1);
+             groupkuang.add(r2);
+             groupkuang.add(r3);
+             groupkuang.add(linekuang1);
+             groupkuang.add(linekuang2);
+             groupkuang.add(linekuang3);
+             groupkuang.add(linekuang4);
+             groupkuang.add(lineyaxian1);
+             groupkuang.add(lineyaxian2);
+             groupkuang.add(lineyaxian3);
+             groupkuang.add(lineyaxian4);
+             groupkuang.add(linebl1);
+             groupkuang.add(linebl2);
+             groupkuang.add(linebl3);
+             //下标尺
+             var grouplinew = canvas1.group();
+              grouplinew.id("gw");
+              var linew = canvas1.line(50,500, 450, 500).attr({ 'stroke': 'black', 'stroke-width': 1 });
+              var linew1 = canvas1.line(50, 490, 50, 510).attr({ 'stroke': 'black', 'stroke-width': 1 });
+              var linew2 = canvas1.line(450, 490, 450, 510).attr({ 'stroke': 'black', 'stroke-width': 1 });
+              var textw = canvas1.text(function(add) {
+                add.tspan('200').dx(240).dy(520);
+                });
+              grouplinew.add(linew);
+              grouplinew.add(linew1);
+              grouplinew.add(linew2);
+              grouplinew.add(textw);
+
+              //右标尺
+              var grouplineh = canvas1.group();
+              grouplineh.id("gh");
+              var lineh = canvas1.line(500,50, 500, 450).attr({ 'stroke': 'black', 'stroke-width': 1 });
+              var lineh1 = canvas1.line(490, 50, 510, 50).attr({ 'stroke': 'black', 'stroke-width': 1 });
+              var lineh2 = canvas1.line(490, 450, 510, 450).attr({ 'stroke': 'black', 'stroke-width': 1 });
+              var texth = canvas1.text(function(add) {
+                add.tspan('200').dx(520).dy(240);
+                });
+              grouplineh.add(lineh);
+              grouplineh.add(lineh1);
+              grouplineh.add(lineh2);
+              grouplineh.add(texth);
+         
+         
+             //var lineyaxian4 = canvas1.line(60, 440, 65, 435).attr({ 'stroke': 'black', 'stroke-width': 1 });
              //var localXY=document.getElementById("g1").getBoundingClientRect();
-
              //var r3 = canvas1.rect(200, 50).fill('#496E91');
-              //group.add(r2);
-              //group.add(r3);
-
-            r2.draggable();
-            r2.id('r2');
-              //group.draggable();
-              AddEvent(r2);
+            group.add(groupkuang);
+            group.add(grouplinew);
+            group.add(grouplineh);
+            
+            group.draggable();
+            //AddEvent(r2);
             //var r1=SVG.get('rect1');
             //var r2=canvas1.nested();
             //var group = r2.group();
