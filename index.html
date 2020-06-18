@@ -58,10 +58,18 @@
     <script type="text/javascript" src="saveSvgAsPng.js"></script>
     <script type="text/javascript" src="assets/js/main.js"></script>
     <script type="text/javascript" src="svg.select.js"></script>
+    
     <script type="text/javascript">
         var canvas1=null;
         var obj;
         var objdiv;
+        var startx=50;//起始位置
+        var starty=50;
+        var kuangzongkuan=400;//框总宽
+        var kuangzonggao=400;
+        var yaxiankuan=5;//压线宽
+        var kuangkuan=10;//框宽
+        var tingkuan=8;//梃宽
         checkCanvas1()
         function checkCanvas1()
         {
@@ -80,7 +88,7 @@
         function CreateCircle() {
             var rect = canvas1.circle(50);
             rect.attr({ 'fill': '#FFC23E', 'stroke': 'pink' });
-            rect.draggable();
+            rect.draggable();   
         }
         function CreateChuangKuang() { 
              //var nested = canvas1.nested();
@@ -90,10 +98,15 @@
 
              var groupkuang = canvas1.group();
              groupkuang.id("g1");
-             var r1 = canvas1.rect(400, 400).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':50,'y':50});
-             var r2 = canvas1.rect(380, 380).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':60,'y':60});
-             var r3 = canvas1.rect(370, 370).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':65,'y':65});
-          
+             var r1 = canvas1.rect(kuangzongkuan, kuangzonggao).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx,'y':starty});//窗框rect
+             var r2 = canvas1.rect(kuangzongkuan-2*kuangkuan, kuangzonggao-2*kuangkuan).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan,'y':starty+kuangkuan});//压线rect
+             var r3 = canvas1.rect(kuangzongkuan-2*kuangkuan-2*yaxiankuan, kuangzonggao-2*kuangkuan-2*yaxiankuan).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan+yaxiankuan,'y':starty+kuangkuan+yaxiankuan});//玻璃rect
+             r3.id("r3");
+             r2.id("r2");
+             r3.on('mousedown', function(e){
+                r2.selectize();
+               
+             }, false);
             //框line
              var linekuang1 = canvas1.line(50,50, 60, 60).attr({ 'stroke': 'black', 'stroke-width': 1 });
              var linekuang2 = canvas1.line(450, 50, 440, 60).attr({ 'stroke': 'black', 'stroke-width': 1 });
@@ -150,7 +163,7 @@
                 });
               grouplineh.add(lineh);
               grouplineh.add(lineh1);
-              grouplineh.add(lineh2);
+              grouplineh.add(lineh2)
               grouplineh.add(texth);
          
          
@@ -179,7 +192,7 @@
          }
         function CreateHengZhongTing() {
             //obj.attr({fill: 'red','stroke-width': 3});
-            var XY=document.getElementById("r2").getBoundingClientRect();
+            var XY=document.getElementById("g1").getBoundingClientRect();
             var divXY=document.getElementById("canvas1").getBoundingClientRect();
             console.log(XY);
             console.log(divXY);
@@ -189,27 +202,54 @@
             var x2y=XY.height/2+XY.y-divXY.y;
             console.log(x,xy,x2x,x2y);
             //var nested =  SVG('r2').nested();
+
             var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': '#953734', 'stroke-width': 6 });
+
+            var hengting = canvas1.rect(tingkuan,kuangzonggao-(2*kuangkuan)).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':(kuangzongkuan/2)+startx-(tingkuan/2),'y':(starty+kuangkuan)});
+            var hengtingtopyaxian = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan,kuangzongkuan-kuangkuan*2).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangzongkuan/2+tingkuan/2,'y':starty+kuangkuan});
+            var hengtingunderboli = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan-2*yaxiankuan,kuangzongkuan-2*kuangkuan-2*yaxiankuan).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangzongkuan/2+tingkuan/2+yaxiankuan,'y':starty+kuangkuan+yaxiankuan});
+            
+            var hengtingrightyaxian = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan,kuangzongkuan-kuangkuan*2).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangzongkuan/2+tingkuan/2,'y':starty+kuangkuan});
+            var hengtingrightboli = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan-2*yaxiankuan,kuangzongkuan-2*kuangkuan-2*yaxiankuan).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangzongkuan/2+tingkuan/2+yaxiankuan,'y':starty+kuangkuan+yaxiankuan});
+
             AddEvent(rect);
             rect.draggable();
         }
-        function CreateShuZhongTing() {
-            var XY=document.getElementById("r2").getBoundingClientRect();
+        function CreateShuZhongTing() {//创建中挺，删除最上层玻璃  删除压线  删除line   加入梃两侧的玻璃
+        
+            var XY=document.getElementById("g1").getBoundingClientRect();
             var divXY=document.getElementById("canvas1").getBoundingClientRect();
             var x =  XY.x-divXY.x+XY.width/2;
             var xy = (XY.y-divXY.y);
             var x2x=XY.x-divXY.x+XY.width/2;
             var x2y=XY.height+XY.y-divXY.y;
             //var nested =  SVG('r2').nested();
-            var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': '#953734', 'stroke-width': 6 });
-            AddEvent(rect);
-            rect.draggable();
+            //var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': '#953734', 'stroke-width': 6 });
+
+            var shuting = canvas1.rect(tingkuan,kuangzonggao-(2*kuangkuan)).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':(kuangzongkuan/2)+startx-(tingkuan/2),'y':(starty+kuangkuan)});
+            var shutingleftyaxian = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan,kuangzongkuan-kuangkuan*2).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan,'y':starty+kuangkuan});
+            var shutingleftboli = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan-2*yaxiankuan,kuangzongkuan-2*kuangkuan-2*yaxiankuan).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan+yaxiankuan,'y':starty+kuangkuan+yaxiankuan});
+            
+            var shutingrightyaxian = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan,kuangzongkuan-kuangkuan*2).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangzongkuan/2+tingkuan/2,'y':starty+kuangkuan});
+            var shutingrightboli = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan-2*yaxiankuan,kuangzongkuan-2*kuangkuan-2*yaxiankuan).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangzongkuan/2+tingkuan/2+yaxiankuan,'y':starty+kuangkuan+yaxiankuan});
+            
+            var lineyaxian1 = canvas1.line(startx+kuangkuan,starty+kuangkuan, startx+kuangkuan+yaxiankuan,starty+kuangkuan+yaxiankuan).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var lineyaxian2 = canvas1.line(440, 60, 435, 65).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var lineyaxian3 = canvas1.line(440, 440, 435, 435).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var lineyaxian4 = canvas1.line(60, 440, 65, 435).attr({ 'stroke': 'black', 'stroke-width': 1 });
+            //shutingleftyaxian.id("shutingleftyaxian");
+            //var g1=SVG.get('g1');
+            //SVG.get('r2').remove();
+            //SVG.get('r3').remove();
+            //g1.add(shuting);
+            //AddEvent(rect);     
+            //rect.draggable();
+            
         }
         function AddEvent(obj)
         {
             obj.dblclick(function() {
-                this.attr({ 'stroke': 'white' , 'stroke-width': 1,'stroke-dasharray': 5});
-                //this.select();
+                this.attr({ 'stroke': 'white' , 'stroke-width': 1,'stroke-dasharray': 5});  
             });
         }
         function CreateBoli()//右上角加玻璃
