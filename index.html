@@ -239,13 +239,24 @@
              var lineyaxian4 = canvas1.line(60, 440, 65, 435).attr({ 'stroke': 'black', 'stroke-width': 1 });
             //shutingleftyaxian.id("shutingleftyaxian");
             //var g1=SVG.get('g1');
-            //SVG.get('r2').remove();
-            //SVG.get('r3').remove();
+            SVG.get('r2').remove();
+            SVG.get('r3').remove();
             //g1.add(shuting);
             //AddEvent(rect);     
             //rect.draggable();
             
         }
+
+        //obj 点击的区域id
+        function CreateTingPublic(obj) { 
+           var objid=$(obj).attr("id");
+
+            var x=$(obj).attr("x");
+            var y=$(obj).attr("y");
+            var width=$(obj).attr("width");
+            var height=$(obj).attr("height");
+            
+         }
         function AddEvent(obj)
         {
             obj.dblclick(function() {

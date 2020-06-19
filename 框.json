@@ -6,7 +6,7 @@
             {
                 "填充颜色":{
                     "type":"colorpicker",
-                    "value":["默认",""]
+                    "value":["默认#B2D1EE",""]
                 },
                 "贴图渲染":{
                     "type":"colorsrc",
