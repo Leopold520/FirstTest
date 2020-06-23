@@ -16,7 +16,7 @@
      cursor:url('ting.ico'),pointer;
     }
    </style>
-  <link rel="stylesheet" type="text/css" href="svg.select.css" />
+  <!-- <link rel="stylesheet" type="text/css" href="svg.select.css" /> -->
 <body>
     <div id="canvas1" style="border:1px dashed rgb(33, 159, 175);min-height:600px;"></div>
     <svg xmlns xmlns="http://www.w3.org/2000/svg">
@@ -37,27 +37,36 @@
         <button onclick="CreateYaXian()">创建压线</button>
         <button onclick="AddCZ()">填充材质</button>
         <button onclick="GetXY()">获取坐标</button>
-    </div>
-    <div>
-        距上边距位置：
-        <input type="text" placeholder="高" value="100" id="addlineheight">
-        <button onclick="CreateLine()">加横线</button>
-    </div>
-    <div>
-        距左边距位置：
-        <input type="text" placeholder="高" value="100" id="addrowwidth">
-        <button onclick="CreateRow()">加竖线</button>
-    </div>
-    <div id="divlast">
         <button onclick="DownLoad()">下载矢量图</button>
     </div>
+    <br>
+    <div>
+        x1：
+        <input type="text"  value="" id="x1">
+
+        y1：
+        <input type="text"  value="" id="y1">
+    </div>
+    <div>
+        x2：
+        <input type="text"  value="" id="x2">
+
+        y2：
+        <input type="text"  value="" id="y2">
+    </div>
+    <div>
+        中心点
+        <input type="text"  value="" id="zx">
+        <button onclick="JiSuan()">计算</button>
+    </div>
+
 
     <script type="text/javascript" src="svg.js"></script>
     <script type="text/javascript" src="svg.draggable.js"></script>
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="saveSvgAsPng.js"></script>
     <script type="text/javascript" src="assets/js/main.js"></script>
-    <script type="text/javascript" src="svg.select.js"></script>
+    <!-- <script type="text/javascript" src="svg.select.js"></script> -->
     
     <script type="text/javascript">
         var canvas1=null;
@@ -66,10 +75,12 @@
         var startx=50;//起始位置
         var starty=50;
         var kuangzongkuan=400;//框总宽
-        var kuangzonggao=400;
+        var kuangzonggao=400;   
         var yaxiankuan=5;//压线宽
         var kuangkuan=10;//框宽
         var tingkuan=8;//梃宽
+        var selectObj={"id":"","oldvalue":""};
+        var selectArr=new Array();
         checkCanvas1()
         function checkCanvas1()
         {
@@ -97,16 +108,19 @@
              group.id("gdefault");
 
              var groupkuang = canvas1.group();
+             var groupboli= canvas1.group();
              groupkuang.id("g1");
-             var r1 = canvas1.rect(kuangzongkuan, kuangzonggao).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx,'y':starty});//窗框rect
-             var r2 = canvas1.rect(kuangzongkuan-2*kuangkuan, kuangzonggao-2*kuangkuan).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan,'y':starty+kuangkuan});//压线rect
-             var r3 = canvas1.rect(kuangzongkuan-2*kuangkuan-2*yaxiankuan, kuangzonggao-2*kuangkuan-2*yaxiankuan).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan+yaxiankuan,'y':starty+kuangkuan+yaxiankuan});//玻璃rect
+             groupboli.id("gboli");
+             var r1 = canvas1.rect(kuangzongkuan, kuangzonggao).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx,'y':starty,'type':'kuang'});//窗框rect
+             var r2 = canvas1.rect(kuangzongkuan-2*kuangkuan, kuangzonggao-2*kuangkuan).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan,'y':starty+kuangkuan,'type':'yaxian'});//压线rect
+             var r3 = canvas1.rect(kuangzongkuan-2*kuangkuan-2*yaxiankuan, kuangzonggao-2*kuangkuan-2*yaxiankuan).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan+yaxiankuan,'y':starty+kuangkuan+yaxiankuan,'type':'boli'});//玻璃rect
              r3.id("r3");
              r2.id("r2");
-             r3.on('mousedown', function(e){
-                r2.selectize();
-               
-             }, false);
+            //  r3.on('mousedown', function(e){
+            //     AddClickEvent(r3);
+            //  }, false);
+            AddSelectEvent(r1,null)
+            AddSelectEvent(r3,r2);
             //框line
              var linekuang1 = canvas1.line(50,50, 60, 60).attr({ 'stroke': 'black', 'stroke-width': 1 });
              var linekuang2 = canvas1.line(450, 50, 440, 60).attr({ 'stroke': 'black', 'stroke-width': 1 });
@@ -138,6 +152,16 @@
              groupkuang.add(linebl1);
              groupkuang.add(linebl2);
              groupkuang.add(linebl3);
+
+             groupboli.add(r2);
+             groupboli.add(r3);
+             groupboli.add(lineyaxian1);
+             groupboli.add(lineyaxian2);
+             groupboli.add(lineyaxian3);
+             groupboli.add(lineyaxian4);
+             groupboli.add(linebl1);
+             groupboli.add(linebl2);
+             groupboli.add(linebl3);
              //下标尺
              var grouplinew = canvas1.group();
               grouplinew.id("gw");
@@ -220,12 +244,15 @@
             var XY=document.getElementById("g1").getBoundingClientRect();
             var divXY=document.getElementById("canvas1").getBoundingClientRect();
             var x =  XY.x-divXY.x+XY.width/2;
-            var xy = (XY.y-divXY.y);
+            var xy = (XY.y-divXY.y);    
             var x2x=XY.x-divXY.x+XY.width/2;
             var x2y=XY.height+XY.y-divXY.y;
-            //var nested =  SVG('r2').nested();
+            console.log(XY);     
+            console.log(divXY);
+            //var nested =  SVG('r2').nested(); 
             //var rect = canvas1.line(x, xy, x2x, x2y).attr({ 'stroke': '#953734', 'stroke-width': 6 });
-
+            startx=XY.x-divXY.x;
+            starty=XY.y-divXY.y;
             var shuting = canvas1.rect(tingkuan,kuangzonggao-(2*kuangkuan)).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':(kuangzongkuan/2)+startx-(tingkuan/2),'y':(starty+kuangkuan)});
             var shutingleftyaxian = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan,kuangzongkuan-kuangkuan*2).fill('#b2d1ee').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan,'y':starty+kuangkuan});
             var shutingleftboli = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan-2*yaxiankuan,kuangzongkuan-2*kuangkuan-2*yaxiankuan).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangkuan+yaxiankuan,'y':starty+kuangkuan+yaxiankuan});
@@ -234,33 +261,51 @@
             var shutingrightboli = canvas1.rect(kuangzongkuan/2-tingkuan/2-kuangkuan-2*yaxiankuan,kuangzongkuan-2*kuangkuan-2*yaxiankuan).fill('#eff5ea').attr({ 'stroke': 'black', 'stroke-width':1,'x':startx+kuangzongkuan/2+tingkuan/2+yaxiankuan,'y':starty+kuangkuan+yaxiankuan});
             
             var lineyaxian1 = canvas1.line(startx+kuangkuan,starty+kuangkuan, startx+kuangkuan+yaxiankuan,starty+kuangkuan+yaxiankuan).attr({ 'stroke': 'black', 'stroke-width': 1 });
-             var lineyaxian2 = canvas1.line(440, 60, 435, 65).attr({ 'stroke': 'black', 'stroke-width': 1 });
-             var lineyaxian3 = canvas1.line(440, 440, 435, 435).attr({ 'stroke': 'black', 'stroke-width': 1 });
-             var lineyaxian4 = canvas1.line(60, 440, 65, 435).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var lineyaxian2 = canvas1.line(startx+kuangzongkuan-kuangkuan, starty+kuangkuan, startx+kuangzongkuan-kuangkuan-yaxiankuan, starty+kuangkuan+yaxiankuan).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var lineyaxian3 = canvas1.line(startx+kuangzongkuan-kuangkuan, starty+kuangzonggao-kuangkuan, startx+kuangzongkuan-kuangkuan-yaxiankuan, starty+kuangzonggao-kuangkuan-yaxiankuan).attr({ 'stroke': 'black', 'stroke-width': 1 });
+             var lineyaxian4 = canvas1.line(startx+kuangkuan, starty+kuangzonggao-kuangkuan, startx+kuangkuan+yaxiankuan, starty+kuangzonggao-kuangkuan-yaxiankuan).attr({ 'stroke': 'black', 'stroke-width': 1 });
             //shutingleftyaxian.id("shutingleftyaxian");
             //var g1=SVG.get('g1');
-            SVG.get('r2').remove();
-            SVG.get('r3').remove();
+            SVG.get('gboli').remove();
             //g1.add(shuting);
             //AddEvent(rect);     
             //rect.draggable();
-            
+            AddSelectEvent(shuting,null);
         }
 
-        //obj 点击的区域id
+        //obj 点击的区域id  
         function CreateTingPublic(obj) { 
-           var objid=$(obj).attr("id");
-
+            var objid=$(obj).attr("id");
             var x=$(obj).attr("x");
             var y=$(obj).attr("y");
             var width=$(obj).attr("width");
             var height=$(obj).attr("height");
             
          }
-        function AddEvent(obj)
+
+        function AddBoliLine(obj) { 
+            console.log(obj.attr("fill"));
+            
+         }
+        function AddSelectEvent(obj,toobj)
         {
-            obj.dblclick(function() {
-                this.attr({ 'stroke': 'white' , 'stroke-width': 1,'stroke-dasharray': 5});  
+            console.log(obj);
+            obj.click(function() {
+                console.log(obj.attr("fill"));
+                //obj.attr({ 'stroke': '#7FBF7F' , 'stroke-width': 1,'stroke-dasharray': 5});  
+                for (var i = 0; i <selectArr.length ; i++) {
+                    var id=selectArr[i].id;
+                    var oldvalue=selectArr[i].oldvalue;
+                    $("#"+id).attr({'fill': oldvalue});
+                }
+                selectArr.length=0;
+                selectArr.push({id:obj.node.id,oldvalue:obj.node.attributes.fill.value});
+                obj.attr({ 'fill': '#7FBF7F'}); 
+                if(toobj)
+                {
+                  selectArr.push({id:toobj.node.id,oldvalue:toobj.node.attributes.fill.value});
+                  toobj.attr({'fill': '#7FBF7F'});  
+                }
             });
         }
         function CreateBoli()//右上角加玻璃
@@ -284,6 +329,31 @@
             //<image width="100%" height="100%" x="0" y="0" stroke="black" xlink:href="111.png"></image>
             boli1.attr({ 'fill': 'url(#patter-0)' });
         }
+        function JiSuan() {
+            var x1 = $("#x1").val();
+            var y1 = $("#y1").val();
+            var x2 = $("#x2").val();
+            var y2 = $("#y2").val();
+            var aa = parseInt(x1) + parseInt(x2);
+            var bb = parseInt(y1) + parseInt(y2);
+            if(Math.round(aa/2) == (aa/2))
+            {
+                var xx = aa/2;
+            }
+            else{
+                var xx = aa + "/" + 2;
+            }
+            if(Math.round(bb/2) == (bb/2))
+            {
+                var yy = bb/2;
+            }
+            else{
+                var yy = bb + "/" + 2;
+            }
+                
+            $("#zx").val(xx+","+yy);
+    }
+          
         function DownLoad() {
             saveSvgAsPng(obj.parent.node, "test.png");
             // var canvas = obj.parent.node;
