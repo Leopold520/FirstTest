@@ -283,11 +283,11 @@
             
          }
 
-        function AddBoliLine(obj) { 
-            console.log(obj.attr("fill"));
+        function AddBoliLine(baseboliobj,tingobj) { //基础玻璃，梃对象
+            console.log(obj);
             
-         }
-        function AddSelectEvent(obj,toobj)
+         }  
+        function AddSelectEvent(obj,toobj)//点击区域obj，呈现效果obj
         {
             console.log(obj);
             obj.click(function() {
@@ -295,10 +295,10 @@
                 //obj.attr({ 'stroke': '#7FBF7F' , 'stroke-width': 1,'stroke-dasharray': 5});  
                 for (var i = 0; i <selectArr.length ; i++) {
                     var id=selectArr[i].id;
-                    var oldvalue=selectArr[i].oldvalue;
-                    $("#"+id).attr({'fill': oldvalue});
+                    var oldvalue=selectArr[i].oldvalue; 
+                    $("#"+id).attr({'fill': oldvalue}); 
                 }
-                selectArr.length=0;
+                selectArr.length=0; 
                 selectArr.push({id:obj.node.id,oldvalue:obj.node.attributes.fill.value});
                 obj.attr({ 'fill': '#7FBF7F'}); 
                 if(toobj)
